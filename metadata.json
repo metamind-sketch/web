@@ -1,0 +1,8 @@
+{
+  "name": "web",
+  "description": "Expert Computer Repair, Laptop Service \u0026 Custom PC Building in Coimbatore. Same-day diagnostics by certified local technicians with a 90-day warranty.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
