@@ -33,6 +33,7 @@ import ServiceCatalog from "./components/ServiceCatalog";
 import FAQSection from "./components/FAQSection";
 import AdminPanel from "./components/AdminPanel";
 import FloatingCardsDecoration from "./components/FloatingCardsDecoration";
+import PlexusBackground from "./components/PlexusBackground";
 
 // Style presets for the ambient blobs
 const THEME_PRESETS: BlobColor[] = [
@@ -73,6 +74,24 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false);
+
+  // Welcome popup state
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const shown = sessionStorage.getItem("fixmypc_welcome_shown");
+    if (!shown) {
+      const timer = setTimeout(() => {
+        setShowWelcome(true);
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleCloseWelcome = () => {
+    setShowWelcome(false);
+    sessionStorage.setItem("fixmypc_welcome_shown", "true");
+  };
 
   // Prefilled Service Selector State (from Service catalog shortcuts to Hero form)
   const [prefilledService, setPrefilledService] = useState("");
@@ -173,25 +192,19 @@ export default function App() {
       <FloatingCardsDecoration />
 
       {/* -------------------- 1. HERO SECTION: RICH DARK IMAGE THEME -------------------- */}
-      <div className="relative bg-slate-900 overflow-hidden pb-16 lg:pb-24 border-b border-slate-800">
+      <div className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden pb-16 lg:pb-24 border-b border-slate-800">
         
-        {/* Professional Educational Student Background Image Layer */}
-        <div className="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none">
-          <img 
-            src="/src/assets/images/students_learning_hero_bg_1783749841839.jpg" 
-            alt="Students Learning Together Background" 
-            className="w-full h-full object-cover object-center opacity-85 scale-100"
-            referrerPolicy="no-referrer"
-          />
-          {/* Elegant rich dark gradient overlay to make image highly visible and text extremely legible */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-slate-900/50 to-slate-950/70" />
-        </div>
+        {/* Elegant rich dark gradient overlay to make background highly visible and text extremely legible */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/70 z-0 pointer-events-none" />
+
+        {/* Real-time Interactive Plexus/Constellation Network Particle Background - Placed on top of background gradients */}
+        <PlexusBackground />
 
         {/* Dynamic ambient grid overlay - extremely subtle dark gray */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none z-0" />
 
-        {/* Top Navbar Header */}
-        <header className="relative w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between z-40">
+        {/* Top Navbar Header with elegant mild glassmorphic background */}
+        <header className="relative w-full max-w-6xl mx-4 md:mx-auto mt-4 px-6 py-4 flex items-center justify-between z-40 bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg">
           <div className="flex items-center gap-3">
             <div>
               <span className="font-serif text-lg md:text-xl font-bold tracking-tight text-white block leading-none">
@@ -438,6 +451,85 @@ export default function App() {
           <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-400 border border-white animate-pulse" />
         </motion.a>
       </div>
+
+      {/* Welcome Popup Modal */}
+      <AnimatePresence>
+        {showWelcome && (
+          <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4">
+            {/* Backdrop Blur overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={handleCloseWelcome}
+              className="absolute inset-0 bg-slate-950/70 backdrop-blur-md"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -15 }}
+              transition={{ type: "spring", duration: 0.6, bounce: 0.15 }}
+              className="relative w-full max-w-sm bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 overflow-hidden z-10"
+            >
+              {/* Dynamic light gradient accents in background of popup */}
+              <div className="absolute -top-12 -left-12 w-32 h-32 rounded-full bg-blue-400/10 blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-12 -right-12 w-32 h-32 rounded-full bg-violet-400/10 blur-2xl pointer-events-none" />
+
+              {/* Close Button */}
+              <button
+                onClick={handleCloseWelcome}
+                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-50 transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="text-center">
+                {/* Large animated confetti emoji */}
+                <motion.div
+                  initial={{ scale: 0.5, rotate: -20 }}
+                  animate={{ 
+                    scale: [1, 1.15, 1],
+                    rotate: [0, 8, -8, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.5, 
+                    ease: "easeOut",
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    repeatDelay: 1
+                  }}
+                  className="inline-block text-6xl mb-4 select-none"
+                >
+                  🎉
+                </motion.div>
+
+                {/* Heading */}
+                <h2 className="font-serif text-3xl font-extrabold tracking-tight text-slate-900 mb-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                  Welcome!
+                </h2>
+
+                {/* Subheading */}
+                <p className="font-sans text-base text-slate-600 leading-relaxed max-w-xs mx-auto mb-8">
+                  You're one step away from learning valuable computer skills.
+                </p>
+
+                {/* Beautiful Action Button */}
+                <motion.button
+                  whileHover={{ scale: 1.02, y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleCloseWelcome}
+                  className="w-full py-4 px-6 font-sans font-bold text-base text-white rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 shadow-lg shadow-indigo-200 hover:shadow-indigo-300 transition-all duration-300"
+                >
+                  Continue
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
